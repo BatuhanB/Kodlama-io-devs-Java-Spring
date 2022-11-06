@@ -38,17 +38,21 @@ public class ProgrammingLanguageService {
         return mapper.toLanguages(languageList);
     }
 
+//    public List<GetProgrammingLanguagesWithTechnologyDto> getAllWithTechnologies(){
+//        var languageList = repository.findAll();
+//
+//        var technologyList  = technologyMapper.toTechListForLanguage(technologyRepository.findAll());
+//
+//        var mappedLanguageList = mapper.toLanguagesWithTechnologies(languageList);
+//
+//        for (var languages:mappedLanguageList) {
+//                languages.setTechnologies(technologyList);
+//        }
+//        return mappedLanguageList;
+//    }
     public List<GetProgrammingLanguagesWithTechnologyDto> getAllWithTechnologies(){
-        var languageList = repository.findAll();
-
-        var technologyList  = technologyMapper.toTechListForLanguage(technologyRepository.findAll());
-
-        var mappedLanguageList = mapper.toLanguagesWithTechnologies(languageList);
-
-        for (var languages:mappedLanguageList) {
-                languages.setTechnologies(technologyList);
-        }
-        return mappedLanguageList;
+            var languageList = repository.findAll();
+            return mapper.toLanguagesWithTechnologies(languageList);
     }
 
 
