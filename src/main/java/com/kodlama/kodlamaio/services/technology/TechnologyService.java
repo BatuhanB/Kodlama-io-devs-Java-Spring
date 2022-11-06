@@ -8,6 +8,7 @@ import com.kodlama.kodlamaio.services.technology.commands.UpdateTechnologyDto;
 import com.kodlama.kodlamaio.services.technology.constants.TechnologyMessages;
 import com.kodlama.kodlamaio.services.technology.mapper.TechnologyMapper;
 import com.kodlama.kodlamaio.services.technology.queries.GetListTechnologyDto;
+import com.kodlama.kodlamaio.services.technology.queries.GetTechnologiesWithLanguages;
 import com.kodlama.kodlamaio.services.technology.queries.GetTechnologyByIdDto;
 import com.kodlama.kodlamaio.services.technology.queries.GetTechnologyByNameDto;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,12 @@ public class TechnologyService {
         var getListTechnology = technologyRepository.findAll();
         return mapper.toTechnologies(getListTechnology);
     }
+
+    public List<GetTechnologiesWithLanguages> getAllWithLanguages(){
+        var getListTechnology = technologyRepository.findAll();
+        return mapper.toTechnologiesWithLanguages(getListTechnology);
+    }
+
 
     public GetTechnologyByIdDto getById(Long id) throws Exception{
         if(!checkIfTechnologyExists(id)) throw new RuntimeException(TechnologyMessages.TECHNOLOGY_NOT_EXISTS);

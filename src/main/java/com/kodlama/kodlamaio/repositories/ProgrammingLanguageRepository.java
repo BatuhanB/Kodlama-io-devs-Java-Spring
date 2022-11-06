@@ -13,7 +13,7 @@ public interface ProgrammingLanguageRepository extends JpaRepository<Programming
     @Query("select p from ProgrammingLanguage p where p.name = ?1")
     ProgrammingLanguage findProgrammingLanguageByName(String name);
 
-    @Query(value = "select t.name, p.id ,p.name from technologies t inner join programming_languages p on t.programming_language_id = p.id",nativeQuery = true)
+    @Query(value = "Select * from programming_languages p inner join technologies t on p.id = t.programming_language_id where p.id = 3",nativeQuery = true)
     List<GetProgrammingLanguagesWithTechnologyDto> testquery();
 
 }

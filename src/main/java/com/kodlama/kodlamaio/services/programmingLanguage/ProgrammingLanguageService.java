@@ -1,7 +1,9 @@
 package com.kodlama.kodlamaio.services.programmingLanguage;
 
 import com.kodlama.kodlamaio.models.ProgrammingLanguage;
+import com.kodlama.kodlamaio.models.Technology;
 import com.kodlama.kodlamaio.repositories.ProgrammingLanguageRepository;
+import com.kodlama.kodlamaio.repositories.TechnologyRepository;
 import com.kodlama.kodlamaio.services.programmingLanguage.commands.CreateProgrammingLanguageDto;
 import com.kodlama.kodlamaio.services.programmingLanguage.commands.UpdateProgrammingLanguageDto;
 import com.kodlama.kodlamaio.services.programmingLanguage.constants.ProgrammingLanguageMessages;
@@ -10,19 +12,25 @@ import com.kodlama.kodlamaio.services.programmingLanguage.queries.GetListProgram
 import com.kodlama.kodlamaio.services.programmingLanguage.queries.GetProgrammingLanguageByIdDto;
 import com.kodlama.kodlamaio.services.programmingLanguage.queries.GetProgrammingLanguageByNameDto;
 import com.kodlama.kodlamaio.services.programmingLanguage.queries.GetProgrammingLanguagesWithTechnologyDto;
+import com.kodlama.kodlamaio.services.technology.mapper.TechnologyMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ProgrammingLanguageService {
 
     private final ProgrammingLanguageRepository repository;
+    private final TechnologyRepository technologyRepository;
     private final ProgrammingLanguageMapper mapper;
+    private final TechnologyMapper technologyMapper;
 
-    public ProgrammingLanguageService(ProgrammingLanguageRepository repository, ProgrammingLanguageMapper mapper) {
+    public ProgrammingLanguageService(ProgrammingLanguageRepository repository, TechnologyRepository technologyRepository, ProgrammingLanguageMapper mapper, TechnologyMapper technologyMapper) {
         this.repository = repository;
+        this.technologyRepository = technologyRepository;
         this.mapper = mapper;
+        this.technologyMapper = technologyMapper;
     }
 
     public List<GetListProgrammingLanguageDto> getAll(){
@@ -31,8 +39,16 @@ public class ProgrammingLanguageService {
     }
 
     public List<GetProgrammingLanguagesWithTechnologyDto> getAllWithTechnologies(){
-        var languageList = repository.testquery();
-        return languageList;
+        var languageList = repository.findAll();
+
+        var technologyList  = technologyMapper.toTechListForLanguage(technologyRepository.findAll());
+
+        var mappedLanguageList = mapper.toLanguagesWithTechnologies(languageList);
+
+        for (var languages:mappedLanguageList) {
+                languages.setTechnologies(technologyList);
+        }
+        return mappedLanguageList;
     }
 
 

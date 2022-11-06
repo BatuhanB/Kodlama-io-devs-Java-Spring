@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "technologies")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler","technologies"})
 public class Technology extends BaseEntity {
     @Column(name = "name")
     private String name;
@@ -37,7 +37,7 @@ public class Technology extends BaseEntity {
         this.programmingLanguage = programmingLanguage;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.DETACH)
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinColumn(name = "programmingLanguageId")
     private ProgrammingLanguage programmingLanguage;
 }

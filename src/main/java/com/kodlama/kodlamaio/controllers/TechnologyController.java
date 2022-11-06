@@ -4,6 +4,7 @@ import com.kodlama.kodlamaio.services.technology.TechnologyService;
 import com.kodlama.kodlamaio.services.technology.commands.CreateTechnologyDto;
 import com.kodlama.kodlamaio.services.technology.commands.UpdateTechnologyDto;
 import com.kodlama.kodlamaio.services.technology.queries.GetListTechnologyDto;
+import com.kodlama.kodlamaio.services.technology.queries.GetTechnologiesWithLanguages;
 import com.kodlama.kodlamaio.services.technology.queries.GetTechnologyByIdDto;
 import com.kodlama.kodlamaio.services.technology.queries.GetTechnologyByNameDto;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,11 @@ public class TechnologyController {
     @GetMapping("/getall")
     public List<GetListTechnologyDto> getAll(){
         return service.getAll();
+    }
+
+    @GetMapping("/getallwithlanguages")
+    public List<GetTechnologiesWithLanguages> getAllWithLanguages(){
+        return service.getAllWithLanguages();
     }
 
     @GetMapping("/getbyid")

@@ -8,7 +8,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "programming_languages")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ProgrammingLanguage extends BaseEntity {
     @Column(name = "name")
     private String name;
@@ -33,6 +32,6 @@ public class ProgrammingLanguage extends BaseEntity {
     }
 
     @JsonIgnore
-    @OneToMany(mappedBy = "programmingLanguage",fetch = FetchType.EAGER,cascade = CascadeType.DETACH)
+    @OneToMany(mappedBy = "programmingLanguage",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<Technology> technologies;
 }
