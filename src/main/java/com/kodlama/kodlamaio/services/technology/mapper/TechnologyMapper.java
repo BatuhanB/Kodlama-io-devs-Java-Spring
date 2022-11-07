@@ -1,7 +1,7 @@
 package com.kodlama.kodlamaio.services.technology.mapper;
 
 import com.kodlama.kodlamaio.models.Technology;
-import com.kodlama.kodlamaio.services.programmingLanguage.queries.GetListTechnologyForLanguageDto;
+import com.kodlama.kodlamaio.services.technology.queries.GetListTechnologyForLanguageDto;
 import com.kodlama.kodlamaio.services.technology.commands.CreateTechnologyDto;
 import com.kodlama.kodlamaio.services.technology.commands.UpdateTechnologyDto;
 import com.kodlama.kodlamaio.services.technology.queries.GetListTechnologyDto;

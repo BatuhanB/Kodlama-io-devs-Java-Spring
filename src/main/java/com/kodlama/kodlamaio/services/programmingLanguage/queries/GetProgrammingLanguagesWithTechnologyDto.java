@@ -1,5 +1,7 @@
 package com.kodlama.kodlamaio.services.programmingLanguage.queries;
 
+import com.kodlama.kodlamaio.services.technology.queries.GetListTechnologyForLanguageDto;
+
 import java.util.List;
 
 public class GetProgrammingLanguagesWithTechnologyDto {
@@ -9,7 +11,8 @@ public class GetProgrammingLanguagesWithTechnologyDto {
 
     public GetProgrammingLanguagesWithTechnologyDto(){}
 
-    public GetProgrammingLanguagesWithTechnologyDto(Long id, String name, List<GetListTechnologyForLanguageDto> technologies) {
+    public GetProgrammingLanguagesWithTechnologyDto(Long id, String name,
+                                                    List<GetListTechnologyForLanguageDto> technologies) {
         this.id = id;
         this.name = name;
         this.technologies = technologies;

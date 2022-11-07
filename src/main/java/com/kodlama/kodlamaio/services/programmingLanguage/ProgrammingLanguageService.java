@@ -13,6 +13,7 @@ import com.kodlama.kodlamaio.services.programmingLanguage.queries.GetProgramming
 import com.kodlama.kodlamaio.services.programmingLanguage.queries.GetProgrammingLanguageByNameDto;
 import com.kodlama.kodlamaio.services.programmingLanguage.queries.GetProgrammingLanguagesWithTechnologyDto;
 import com.kodlama.kodlamaio.services.technology.mapper.TechnologyMapper;
+import com.kodlama.kodlamaio.services.technology.queries.GetListTechnologyForLanguageDto;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,51 +25,59 @@ public class ProgrammingLanguageService {
     private final ProgrammingLanguageRepository repository;
     private final TechnologyRepository technologyRepository;
     private final ProgrammingLanguageMapper mapper;
-    private final TechnologyMapper technologyMapper;
 
-    public ProgrammingLanguageService(ProgrammingLanguageRepository repository, TechnologyRepository technologyRepository, ProgrammingLanguageMapper mapper, TechnologyMapper technologyMapper) {
+    public ProgrammingLanguageService(ProgrammingLanguageRepository repository,
+                                      TechnologyRepository technologyRepository,
+                                      ProgrammingLanguageMapper mapper) {
         this.repository = repository;
         this.technologyRepository = technologyRepository;
         this.mapper = mapper;
-        this.technologyMapper = technologyMapper;
     }
 
-    public List<GetListProgrammingLanguageDto> getAll(){
+    public List<GetListProgrammingLanguageDto> getAll() {
         var languageList = repository.findAll();
         return mapper.toLanguages(languageList);
     }
+    // Not using mapstruct here because it does not mapping language and technologies correctly
+    // Mapping by myself
+    public List<GetProgrammingLanguagesWithTechnologyDto> getAllWithTechnologies() {
+        var languageList = repository.findAll();
+        var technologyList = technologyRepository.findAll();
 
-//    public List<GetProgrammingLanguagesWithTechnologyDto> getAllWithTechnologies(){
-//        var languageList = repository.findAll();
-//
-//        var technologyList  = technologyMapper.toTechListForLanguage(technologyRepository.findAll());
-//
-//        var mappedLanguageList = mapper.toLanguagesWithTechnologies(languageList);
-//
-//        for (var languages:mappedLanguageList) {
-//                languages.setTechnologies(technologyList);
-//        }
-//        return mappedLanguageList;
-//    }
-    public List<GetProgrammingLanguagesWithTechnologyDto> getAllWithTechnologies(){
-            var languageList = repository.findAll();
-            return mapper.toLanguagesWithTechnologies(languageList);
+        var responseList = new ArrayList<GetProgrammingLanguagesWithTechnologyDto>();
+        for (var language : languageList) {
+            var response = new GetProgrammingLanguagesWithTechnologyDto();
+            response.setId(language.getId());
+            response.setName(language.getName());
+
+            var technologies = new ArrayList<GetListTechnologyForLanguageDto>();
+            for (var technology : technologyList) {
+                if (technology.getProgrammingLanguage().getId().equals(language.getId())) {
+                    var getListTech = new GetListTechnologyForLanguageDto();
+                    getListTech.setId(technology.getId());
+                    getListTech.setName(technology.getName());
+                    technologies.add(getListTech);
+                }
+            }
+            response.setTechnologies(technologies);
+            responseList.add(response);
+        }
+        return responseList;
     }
 
-
-    public GetProgrammingLanguageByIdDto getById(Long id){
+    public GetProgrammingLanguageByIdDto getById(Long id) {
         var language = repository.findById(id).get();
         return mapper.toLanguageById(language);
     }
 
-    public GetProgrammingLanguageByNameDto getByName(String name){
+    public GetProgrammingLanguageByNameDto getByName(String name) {
         var language = repository.findProgrammingLanguageByName(name);
         return mapper.toLanguageByName(language);
     }
 
-    public CreateProgrammingLanguageDto createProgrammingLanguage(CreateProgrammingLanguageDto programmingLanguage) throws Exception{
+    public CreateProgrammingLanguageDto createProgrammingLanguage(CreateProgrammingLanguageDto programmingLanguage) throws Exception {
         var language = mapper.toCreateLanguage(programmingLanguage);
-        if(checkIfProgrammingLanguageNameValid(language)){
+        if (checkIfProgrammingLanguageNameValid(language)) {
             throw new Exception(ProgrammingLanguageMessages.PROGRAMMINGLANGUAGE_NOTVALID);
         }
         repository.save(language);
@@ -77,14 +86,14 @@ public class ProgrammingLanguageService {
         return programmingLanguage;
     }
 
-    public void delete(Long id){
+    public void delete(Long id) {
         repository.deleteById(id);
     }
 
-    public UpdateProgrammingLanguageDto update(UpdateProgrammingLanguageDto programmingLanguage, Long id) throws Exception{
+    public UpdateProgrammingLanguageDto update(UpdateProgrammingLanguageDto programmingLanguage, Long id) throws Exception {
         var updateLanguage = repository.findById(id).get();
-        mapper.update(updateLanguage,programmingLanguage);
-        if(checkIfProgrammingLanguageNameValid(updateLanguage)){
+        mapper.update(updateLanguage, programmingLanguage);
+        if (checkIfProgrammingLanguageNameValid(updateLanguage)) {
             throw new Exception(ProgrammingLanguageMessages.PROGRAMMINGLANGUAGE_NOTVALID);
         }
         repository.save(updateLanguage);
@@ -92,10 +101,11 @@ public class ProgrammingLanguageService {
         return programmingLanguage;
     }
 
-    private boolean checkIfProgrammingLanguageNameValid(ProgrammingLanguage language){
+    private boolean checkIfProgrammingLanguageNameValid(ProgrammingLanguage language) {
         return language.getName().isEmpty();
     }
-    private boolean checkIfProgrammingLanguageExists(ProgrammingLanguage programmingLanguage){
+
+    private boolean checkIfProgrammingLanguageExists(ProgrammingLanguage programmingLanguage) {
         var language = repository.findById(programmingLanguage.getId()).get();
         return programmingLanguage == language;
     }
